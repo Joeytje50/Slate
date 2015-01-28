@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Online Drawing &amp; Sharing tool</title>
+<link rel="stylesheet" href="style.css"/>
+<script src="script.js"></script>
+</head>
+<body onload="init()">
+
+<div id="buttons">
+	<fieldset id="brush">
+		<legend>Brush</legend>
+		<div class="ib">
+			<input type="range" name="Slate-alpha1" min="0" max="1" step="0.01" value="1" data-title="alpha for the primary color">
+			<br/>
+			<input type="color" name="Slate-color1" value="#000000" data-title="Primary color">
+		</div>
+		<div class="ib">
+			<input type="range" name="Slate-alpha2" min="0" max="1" step="0.01" value="1" data-title="alpha for the secondary color">
+			<br/>
+			<input type="color" name="Slate-color2" value="#FFFFFF" data-title="Secondary color">
+		</div>
+		<div class="ib">
+			<input type="range" name="Slate-size" min="2" max="100" step="2" value="4" data-title="Point size">
+			<br/>
+			<div id="sizept"><span style="width: 5px; height: 5px; background: #000;"></span></div>
+		</div>
+	</fieldset>
+	<fieldset id="tool">
+		<legend>Tool</legend>
+		<label class="button" data-title="Free-shape brush">
+			<input type="radio" name="Slate-tool" value="pen" checked>
+			<img src="./icons/pen.png">
+		</label>
+		<label class="button" data-title="Eraser">
+			<input type="radio" name="Slate-tool" value="gum">
+			<img src="./icons/eraser.png">
+		</label>
+		<label class="button" data-title="Fill tool">
+			<input type="radio" name="Slate-tool" value="fill">
+			<img src="./icons/fill.png">
+		</label>
+		<label class="button" data-title="Pipette tool">
+			<input type="radio" name="Slate-tool" value="pipette">
+			<img src="./icons/pipette.png">
+		</label>
+		<label class="button big" data-title="Fill the shape or not?">
+			<input type="checkbox" name="Slate-fill" checked>
+			<img src="./icons/noFill.png">
+		</label>
+		<br/>
+		<label class="button" data-title="Insert text">
+			<input type="radio" name="Slate-tool" value="text">
+			<img src="./icons/text.png">
+		</label>
+		<label class="button" data-title="Draw lines">
+			<input type="radio" name="Slate-tool" value="line">
+			<img src="./icons/line.png">
+		</label>
+		<label class="button" data-title="Draw rectangles">
+			<input type="radio" name="Slate-tool" value="rect">
+			<img src="./icons/rect.png">
+		</label>
+		<label class="button" data-title="Draw ellipses">
+			<input type="radio" name="Slate-tool" value="oval">
+			<img src="./icons/oval.png">
+		</label>
+	</fieldset>
+	<fieldset id="selection">
+		<legend>Selection</legend>
+		<button id="sel-lasso" name="Slate-sel-lasso"></button>
+		<button id="sel-rect" name="Slate-sel-rect"></button>
+		<button id="sel-oval" name="Slate-sel-oval"></button>
+	</fieldset>
+</div>
+<div id="canvas"></div>
+
+</body>
+</html>

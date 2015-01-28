@@ -1,0 +1,114 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+fieldset, .ib {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.ib input {
+	width: 100px;
+	height: 25px;
+}
+
+[data-title] {
+	position: relative;
+}
+[data-title]:hover::before {
+	content: attr(data-title);
+	position: absolute;
+	bottom: 100%;
+	margin-bottom: 5px;
+	left: 0;
+	background: -webkit-linear-gradient(top, #F4ECA8 0%,#F0E06D 50%);
+	background: -moz-linear-gradient(top, #F4ECA8 0%,#F0E06D 50%);
+	background: -o-linear-gradient(top, #F4ECA8 0%,#F0E06D 50%);
+	background: linear-gradient(to bottom, #F4ECA8 0%,#F0E06D 50%);
+	color: #136;
+	opacity: 0.95;
+	border: 1px solid;
+	border-radius: 4px;
+	padding: 1px 3px;
+	white-space: nowrap;
+}
+
+#canvas {
+	border: 1px solid #999;
+	height: calc(100% - 100px);
+	position:relative;
+	background: white;
+}
+
+#canvas canvas {
+	image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAK0lEQVQ4y2NkYGAQYMAD/v//j0+agYmBQjBqwGAwgIVQPDMyMo4G4vA3AABaxAYvbs+9xAAAAABJRU5ErkJggg==") repeat;
+}
+
+#canvas svg {
+	position: absolute;
+	top: 0;
+	left: 0; 
+}
+
+#sizept {
+	text-align: center;
+	width: 100px;
+	height: 25px;
+}
+#sizept span {
+	display: inline-block;
+	border-radius: 100%;
+}
+
+#svg :focus {
+	outline: none;
+}
+
+label.button input {
+	position: fixed;
+	top: -1000px;
+	left: -1000px;
+}
+
+/*TEMP: replace with popup menu on scrollwheel click*/
+label.button {
+	display: inline-block;
+}
+label.button.big {
+	padding-top: 1px;
+	float: right;
+}
+label.button img {
+	border:1px solid #AAA;
+	border-radius:3px;
+	padding:3px;
+	background: -webkit-linear-gradient(top, #EAEAEA 0%,#CBCBCB 50%, #D7D7D7 100%);
+	background: -moz-linear-gradient(top, #EAEAEA 0%,#CBCBCB 50%, #D7D7D7 100%);
+	background: -o-linear-gradient(top, #EAEAEA 0%,#CBCBCB 50%, #D7D7D7 100%);
+	background: linear-gradient(to bottom, #EAEAEA 0%,#CBCBCB 50%, #D7D7D7 100%);
+}
+label.button img:active {
+	background: -webkit-linear-gradient(top, #D7D7D7 0%,#BCBCBC 50%, #EAEAEA 100%);
+	background: -moz-linear-gradient(top, #D7D7D7 0%,#BCBCBC 50%, #EAEAEA 100%);
+	background: -o-linear-gradient(top, #D7D7D7 0%,#BCBCBC 50%, #EAEAEA 100%);
+	background: linear-gradient(to bottom, #D7D7D7 0%,#BCBCBC 50%, #EAEAEA 100%);
+}
+label.button [type="checkbox"] + img {
+	opacity: 0.5;
+}
+label.button :checked + img {
+	background: -webkit-linear-gradient(top, #D5D7FF 0%,#E0DDF0 50%, #E0E0E0 100%);
+	background: -moz-linear-gradient(top, #D5D7FF 0%,#E0DDF0 50%, #E0E0E0 100%);
+	background: -o-linear-gradient(top, #D5D7FF 0%,#E0DDF0 50%, #E0E0E0 100%);
+	background: linear-gradient(to bottom, #D5D7FF 0%,#E0DDF0 50%, #E0E0E0 100%);
+	opacity: 1;
+}
+/* END TEMP */
