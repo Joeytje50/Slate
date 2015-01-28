@@ -16,8 +16,8 @@ function Slate(id) {
 		target = document.getElementsByName('Slate-'+it);
 		if (target.length < 1)
 			continue;
-		val = typeof this.s[it] == 'number' ? +target[0].value : target[0].value;
-		if (target.length == 1)
+		val = typeof this.s[it] === 'number' ? +target[0].value : target[0].value;
+		if (target.length === 1)
 			this.s[it] = val || this.s[it];
 		else //multiple inputs - radio buttons
 			for (var i=0;i<target.length;i++)
@@ -130,7 +130,7 @@ Slate.prototype.shiftWh = function(s, isLine) {
 		signH = h < 0 ? -1 : 1;
 	//the size of both width and height is determined by the smallest of the two
 	var size = Math.min(absW, absH);
-	//only lines can be something other than w == +- h (namely w==0 or h==0)
+	//only lines can be something other than w === +- h (namely w==0 or h==0)
 	if (isLine && absW >= 2*absH) { //closer to horizontal than diagonal
 		s.y2 = s.y1; //height is now 0
 	} else if (isLine && absH >= 2*absW) { //closer to vertical than diagonal
@@ -165,7 +165,7 @@ Slate.prototype.setAttrs = function(el, attrs) {
 	if (!el)
 		return console.error('ReferenceError: %cel%c is not defined', 'font-style: italic;', 'font-style: normal;');
 	for (var attr in attrs)
-		if (attrs[attr] != null)
+		if (attrs[attr] !== null)
 			el.setAttribute(attr, attrs[attr]);
 }
 Slate.prototype.ucFirst = function(str) {
@@ -181,7 +181,7 @@ Slate.prototype.prependChild = function(el, to) {
 
 //See https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
 Slate.prototype.insertSvg = function(callback) { //TODO: ctrl+z
-	if (this.svg.childElementCount == 0) { //don't bother if it's empty.
+	if (this.svg.childElementCount === 0) { //don't bother if it's empty.
 		if (callback) callback.call(this);
 		return;
 	}
@@ -214,7 +214,7 @@ Slate.prototype.insertSvg = function(callback) { //TODO: ctrl+z
 
 Slate.prototype.setProperties = function(el, shape) {
 	var color, fill;
-	if (shape == 'text') {
+	if (shape === 'text') {
 		var color = this.hexToRgba(this.s.color1, this.s.alpha1);
 		var fill = this.hexToRgba(this.s.color2, this.s.alpha2);
 		this.setAttrs(el && el.childNodes[0], {
@@ -235,7 +235,7 @@ Slate.prototype.setProperties = function(el, shape) {
 			),
 		});
 	} else {
-		if (this.s.fill && shape.slice(-4) != 'line') {
+		if (this.s.fill && shape.slice(-4) !== 'line') {
 			fill = this.hexToRgba(this.s.color2, this.s.alpha2);
 		} else {
 			fill = 'none';
@@ -253,7 +253,7 @@ Slate.prototype.setProperties = function(el, shape) {
 
 Slate.prototype.pipette = function(x, y) {
 	var pixel = this.ctx.getImageData(x,y,1,1).data;
-	var inputnum = this.e.shiftKey + 1; //true + 1 == 2;
+	var inputnum = this.e.shiftKey + 1; //true + 1 === 2;
 	var input = document.getElementsByName('Slate-color'+inputnum)[0];
 	input.value = this.rgbToHex(pixel[0], pixel[1], pixel[2]);
 	this.change({target: input});
@@ -285,7 +285,7 @@ Slate.prototype.floodfill = function(x, y) {
 		data.data[px+2] = toCol[2];
 		data.data[px+3] = toCol[3]; //canvas shouldn't have opacity, this is not possible here
 	}
-	if (toCol[0] === data.data[startPx] && toCol[1] === data.data[startPx+1] && toCol[2] === data.data[startPx+2] && toCol[3] == data.data[startPx+3])
+	if (toCol[0] === data.data[startPx] && toCol[1] === data.data[startPx+1] && toCol[2] === data.data[startPx+2] && toCol[3] === data.data[startPx+3])
 		return; //the pixel is already the desired color.
 	//The actual algorithm
 	var xy, px, yWidth, left, right;
@@ -342,7 +342,7 @@ Slate.prototype.floodfill = function(x, y) {
  	If type is /(poly)?line/ w and h represent the end-x and end-y coordinate.
  */
 Slate.prototype.createShape = function(type, s) {
-	if (type == 'pen') type = 'polyline';
+	if (type === 'pen') type = 'polyline';
 	var uppercase = this.ucFirst(type);
 	if ('create'+uppercase in this) {
 		this['create'+uppercase](s.x, s.y);
@@ -404,9 +404,9 @@ Slate.prototype.createPolyline = function(x, y) {
 	}
 	ctx.fillStyle = ctx.strokeStyle; //copy from the above if-statement.
 	if (this.s.eraser) {
-		ctx.globalCompositeOperation="destination-out";
+		ctx.globalCompositeOperation = "destination-out";
 	} else {
-		ctx.globalCompositeOperation="source-over";
+		ctx.globalCompositeOperation = "source-over";
 	}
 	ctx.lineCap = "round";
 	ctx.lineJoin = "round";
@@ -434,10 +434,10 @@ Slate.prototype.createOval = function(x, y) {
 /****** Methods for changing shapes ******/
 Slate.prototype.changeShape = function(x1, y1, x2, y2) {
 	var coords = {x1: x1, y1: y1, x2: x2, y2: y2};
-	if (this.e.resizeDir <= 1 && this.e.shiftKey && this.s.tool != 'pen') {
+	if (this.e.resizeDir <= 1 && this.e.shiftKey && this.s.tool !== 'pen') {
 		//Change the coordinates to make the shape a square/circle/straight line
 		//won't work when resizing in one direction only (horizontal/vertical only resizing)
-		this.shiftWh(coords, this.s.tool == 'line');
+		this.shiftWh(coords, this.s.tool === 'line');
 	}
 	var tool;
 	switch (this.s.tool) {
@@ -446,7 +446,7 @@ Slate.prototype.changeShape = function(x1, y1, x2, y2) {
 		default: tool = this.ucFirst(this.s.tool); break;
 	}
 	this['change'+tool](coords.x1, coords.y1, coords.x2, coords.y2);
-	if (this.s.tool != 'pen')
+	if (this.s.tool !== 'pen')
 		this.changeSelection(x1, y1, x2, y2);
 }
 
@@ -463,11 +463,11 @@ Slate.prototype.changeLine = function(x1, y1, x2, y2) {
 Slate.prototype.changeRect = function(x1, y1, x2, y2) {
 	var attrs = {};
 	var cur = this.curShape;
-	if (this.e.resizeDir != 2) { //don't resize vertically when resizing horizontally
+	if (this.e.resizeDir !== 2) { //don't resize vertically when resizing horizontally
 		attrs['y'] = Math.min(y1, y2);
 		attrs['height'] = Math.abs(y2 - y1);
 	}
-	if (this.e.resizeDir != 3) { //vice versa
+	if (this.e.resizeDir !== 3) { //vice versa
 		attrs['x'] = Math.min(x1, x2);
 		attrs['width'] = Math.abs(x2 - x1);
 	}
@@ -477,11 +477,11 @@ Slate.prototype.changeRect = function(x1, y1, x2, y2) {
 Slate.prototype.changeOval = function(x1, y1, x2, y2) {
 	var attrs = {};
 	var cur = this.curShape;
-	if (this.e.resizeDir != 2) { //don't resize vertically when resizing horizontally
+	if (this.e.resizeDir !== 2) { //don't resize vertically when resizing horizontally
 		attrs['cy'] = y1 + (y2-y1)/2;
 		attrs['ry'] = Math.abs(y2-y1)/2;
 	}
-	if (this.e.resizeDir != 3) { //vice versa
+	if (this.e.resizeDir !== 3) { //vice versa
 		attrs['cx'] = x1 + (x2-x1)/2;
 		attrs['rx'] = Math.abs(x2-x1)/2;
 	}
@@ -495,7 +495,7 @@ Slate.prototype.changePolyline = function(x1, y1, x2, y2) {
 		ctx.globalCompositeOperation="destination-out";
 	else
 		ctx.globalCompositeOperation="source-over";
-	if (ctx.lineWidth != this.s.size + (this.s.eraser ? 8 : 0)) {
+	if (ctx.lineWidth !== this.s.size + (this.s.eraser ? 8 : 0)) {
 		this.bmp = ctx.getImageData(0,0,this.width, this.height);
 		ctx.beginPath();
 		ctx.lineWidth = this.s.size + (this.s.eraser ? 8 : 0);
@@ -532,7 +532,7 @@ Slate.prototype.createUI = function() {
 
 Slate.prototype.moveCursor = function(x, y) {
 	var cur = this.svg.getElementById('Slate-cursor');
-	if (!cur || this.s.tool != 'pen') return;
+	if (!cur || this.s.tool !== 'pen') return;
 	this.setAttrs(cur, {
 		cx: x,
 		cy: y,
@@ -543,11 +543,11 @@ Slate.prototype.moveCursor = function(x, y) {
 }
 
 Slate.prototype.changeCursor = function() {
-	if (this.s.tool == 'rect' || this.s.tool == 'oval' || this.s.tool == 'line') {
+	if (this.s.tool === 'rect' || this.s.tool === 'oval' || this.s.tool === 'line') {
 		this.container.style.cursor = 'crosshair';
 	} else {
 		var cur = this.s.tool + '.cur';
-		if (this.s.tool == 'pen' && this.s.eraser)
+		if (this.s.tool === 'pen' && this.s.eraser)
 			cur = 'eraser.cur';
 		this.container.style.cursor = 'url(icons/'+cur+'), default';
 	}
@@ -653,13 +653,13 @@ Slate.prototype.changeSelection = function(x1, y1, x2, y2) {
 	//This object will be used to run shiftWh on, and it stores those values after the
 	// other variables have been sorted via Math.max and Math.min.
 	var coords = {x1: x1, y1: y1, x2: x2, y2: y2};
-	if (this.e.resizeDir <= 1 && this.e.shiftKey && this.s.tool != 'pen') {
+	if (this.e.resizeDir <= 1 && this.e.shiftKey && this.s.tool !== 'pen') {
 		//Change the coordinates to make the shape a square/circle/straight line
 		//won't work when resizing in one direction only (horizontal/vertical only resizing)
-		this.shiftWh(coords, this.s.tool == 'line');
+		this.shiftWh(coords, this.s.tool === 'line');
 	}
 	//make sure x and y coordinates are in increasing order (top-left -> bottom-right)
-	if (boxes.length == 2) { //for lines
+	if (boxes.length === 2) { //for lines
 		x1 = coords.x1;
 		y1 = coords.y1;
 		x2 = coords.x2;
@@ -681,10 +681,10 @@ Slate.prototype.changeSelection = function(x1, y1, x2, y2) {
 		x2 = Math.max(coords.x1, coords.x2);
 		y2 = Math.max(coords.y1, coords.y2);
 		var original = (box.getAttribute('desc')||'0,0,0,0').split(','); //defaults to 0,0,0,0
-		if (this.e.resizeDir == 2) { //horizontal-only resizing; y stays the same
+		if (this.e.resizeDir === 2) { //horizontal-only resizing; y stays the same
 			y1 = +original[1]; //convert to number first
 			y2 = +original[3];
-		} else if (this.e.resizeDir == 3) { //vertical-only resizing; x stays the same
+		} else if (this.e.resizeDir === 3) { //vertical-only resizing; x stays the same
 			x1 = +original[0];
 			x2 = +original[2];
 		}
@@ -719,7 +719,7 @@ Slate.prototype.middlemouseclick = function(e) {
 
 //Mousedown doesn't do anything but save the location. Only when mouse releases or moves something appears.
 Slate.prototype.mousedown = function(e) {
-	if (e.which == 2) { //middle mouse click
+	if (e.which === 2) { //middle mouse click
 		this.middlemouseclick(e);
 		return;
 	}
@@ -739,34 +739,34 @@ Slate.prototype.mousedown = function(e) {
 			default: this.e.resizeDir = 1; break;
 		}
 		var coords = e.target.parentNode.getAttribute('desc').split(',');
-		if (pos % 3 == 0 || (g.childElementCount == 2 && e.target == g.firstChild)) { 
+		if (pos % 3 === 0 || (g.childElementCount === 2 && e.target === g.firstChild)) { 
 			//the box is in the first column, or it's the first box for lines
 			this.e.prevX = +coords[2];
 		} else {
 			this.e.prevX = +coords[0];
 		}
-		if (pos < 3 && (g.childElementCount != 2 || e.target == g.firstChild)) {
+		if (pos < 3 && (g.childElementCount !== 2 || e.target === g.firstChild)) {
 			//the box is in the first row, or it's the first box for lines
 			this.e.prevY = +coords[3];
 		} else {
 			this.e.prevY = +coords[1];
 		}
-	} else if ((e.target == this.svg || this.svg.contains(e.target)) && e.target.tagName.toLowerCase() != 'div') {
+	} else if ((e.target === this.svg || this.svg.contains(e.target)) && e.target.tagName.toLowerCase() !== 'div') {
 		this.e.posX = e.offsetX || e.layerX; //offsetX is W3C standard, layerX is for FF
 		this.e.posY = e.offsetY || e.layerY;
 		e.preventDefault(); //contextmenu, scroll popup thingy
 		this.e.moveOut = false;
 		this.e.shiftKey = e.shiftKey;
-		if ((this.s.tool == 'pen' || this.s.tool == 'fill') && e.which == 3) {
+		if ((this.s.tool === 'pen' || this.s.tool === 'fill') && e.which === 3) {
 			this.e.shiftKey = true; //right mouse works just like shift key (eraser) for pen
 			//only for pen; eraser stays eraser with right mouse button.
-		} else if (e.which == 3) {
+		} else if (e.which === 3) {
 			this.s.fill = !this.s.fill; //swap fill setting when using right mouse button
 		}
-		if (this.s.tool == 'pipette' || (this.s.tool == 'pen' && e.ctrlKey)) {
-			this.pipette(this.e.posX, this.e.posY); //with tool == pen||pipette, the svg is always empty.
+		if (this.s.tool === 'pipette' || (this.s.tool === 'pen' && e.ctrlKey)) {
+			this.pipette(this.e.posX, this.e.posY); //with tool === pen||pipette, the svg is always empty.
 			return;
-		} else if (this.s.tool == 'fill') {
+		} else if (this.s.tool === 'fill') {
 			this.floodfill(this.e.posX, this.e.posY);
 		}
 		this.insertSvg(function() {
@@ -774,14 +774,14 @@ Slate.prototype.mousedown = function(e) {
 				x: this.e.posX,
 				y: this.e.posY,
 			});
-			if (this.s.tool == 'pen')
+			if (this.s.tool === 'pen')
 				this.moveCursor(this.e.posX, this.e.posY);
 			this.e.prevX = this.e.posX;
 			this.e.prevY = this.e.posY;
 			this.e.prevT = e.timeStamp;
 			this.e.mousedown = true; //change inside callback so mousemoves don't work while loading
 		});
-	} else if (e.target.type == 'range' && e.detail > 1) { //multi-click on a range input resets them
+	} else if (e.target.type === 'range' && e.detail > 1) { //multi-click on a range input resets them
 		e.target.value = e.target.getAttribute('value'); //reset to original attribute value (its default)
 		this.change(e);
 	}
@@ -789,33 +789,33 @@ Slate.prototype.mousedown = function(e) {
 
 Slate.prototype.mousemove = function(e) {
 	var cur = this.svg.getElementById('Slate-cursor');
-	if (e.target != this.svg && !this.svg.contains(e.target)) { //stop if the mouse is outside the svg
+	if (e.target !== this.svg && !this.svg.contains(e.target)) { //stop if the mouse is outside the svg
 		this.e.moveOut = true;
 		if (cur)
 			cur.style.display = 'none'; //hide the cursor dot when outside the canvas
 		return;
 	} else {
 		if (cur)
-			cur.style.display = this.s.tool == 'pen' ? 'initial' : 'none'; //only show for 'pen'
+			cur.style.display = this.s.tool === 'pen' ? 'initial' : 'none'; //only show for 'pen'
 	}
 	var posX = e.layerX || e.offsetX; //offsetX is W3C standard, layerX is often more accurate
 	var posY = e.layerY || e.offsetY;
 	this.moveCursor(posX, posY)
 	//only register actual movements, only when mouse is down.
-	if (!this.e.mousedown || (this.e.prevX == posX && this.e.prevY == posY)) 
+	if (!this.e.mousedown || (this.e.prevX === posX && this.e.prevY === posY)) 
 		return;
 	var curT = e.timeStamp;
 	var moved = Math.abs(this.e.prevX - posX) + Math.abs(this.e.prevY - posY); //absolute total distance moved
 	//pen must always move >2px; show at most >FPS< fps; Exception: when pen(!) has travelled more than 10px. 
-	if ((this.s.tool == 'pen' && moved < 2) || (curT - this.e.prevT < ((1000/this.s.FPS)) && !(this.s.tool == 'pen' && moved > 10))) {
+	if ((this.s.tool === 'pen' && moved < 2) || (curT - this.e.prevT < ((1000/this.s.FPS)) && !(this.s.tool === 'pen' && moved > 10))) {
 		return;
 	}
 	this.e.posX = posX; //copy over to class variable now that the checks has been passed
 	this.e.posY = posY;
 	this.e.moving = true;
-	this.e.shiftKey = e.shiftKey || (this.s.tool == 'pen' && e.which == 3);
+	this.e.shiftKey = e.shiftKey || (this.s.tool === 'pen' && e.which === 3);
 	//make a selection box for text boxes, because they don't have outlines of themselves.
-	if (this.s.tool == 'text' && this.e.resizeDir == 0) {
+	if (this.s.tool === 'text' && this.e.resizeDir === 0) {
 		this.startSelection(false);
 	}
 	//Now we're sure we're mouse-down, on the svg, moving, and either more than 1/FPSth of a second later, OR moving fast with the pen.
@@ -824,8 +824,8 @@ Slate.prototype.mousemove = function(e) {
 }
 
 Slate.prototype.mouseup = function(e) {
-	if (this.e.moving && this.e.resizeDir == 0 && ['rect', 'oval', 'line'].indexOf(this.s.tool) != -1) {
-		this.startSelection(this.s.tool == 'line');
+	if (this.e.moving && this.e.resizeDir === 0 && ['rect', 'oval', 'line'].indexOf(this.s.tool) !== -1) {
+		this.startSelection(this.s.tool === 'line');
 		this.changeSelection(this.e.prevX,this.e.prevY,this.e.posX,this.e.posY);
 	}
 	this.e.shiftKey = e.shiftKey; //reset in the case of right mouse click
@@ -839,13 +839,13 @@ Slate.prototype.contextmenu = function(e) {
 }
 
 Slate.prototype.change = function(e) {
-	if (this.s.hasOwnProperty('Slate-'+e.target.name) == -1) return;
+	if (this.s.hasOwnProperty('Slate-'+e.target.name) === -1) return;
 	var setting = e.target.name.slice('Slate-'.length);
-	if (e.target.type == 'checkbox') {
+	if (e.target.type === 'checkbox') {
 		this.s[setting] = e.target.checked;
-	} else if (e.target.type == 'radio') {
+	} else if (e.target.type === 'radio') {
 		if (e.target.checked) {
-			if (e.target.value == 'gum') {
+			if (e.target.value === 'gum') {
 				this.s.tool = 'pen';
 				this.s.eraser = true;
 			} else {
@@ -855,20 +855,20 @@ Slate.prototype.change = function(e) {
 		}
 		this.insertSvg(this.changeCursor);
 	} else {
-		if (typeof this.s[setting] == 'number')
+		if (typeof this.s[setting] === 'number')
 			this.s[setting] = +e.target.value; //keep it a number
 		else
 			this.s[setting] = e.target.value;
 	}
-	if (e.target.type != 'radio' && this.curShape != null) {
-		var shapeType = this.s.tool == 'pen' ? 'polyline' : this.s.tool;
+	if (e.target.type !== 'radio' && this.curShape !== null) {
+		var shapeType = this.s.tool === 'pen' ? 'polyline' : this.s.tool;
 		this.setProperties(this.curShape, shapeType);
 	}
 }
 
 Slate.prototype.input = function(e) {
 	//dynamic updating on range sliding
-	if (e.target.type == 'range')
+	if (e.target.type === 'range')
 		this.change(e); //send through to the change event handler
 }
 
